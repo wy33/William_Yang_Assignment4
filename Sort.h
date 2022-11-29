@@ -645,7 +645,7 @@ void QuickSort2(vector<Comparable>& a, Comparator less_than)
  * Partition the subarray.
  */
 template <typename Comparable, typename Comparator>
-int first(vector<Comparable>& a, int left, int right, Comparator less_than)
+int firstPivotPartition(vector<Comparable>& a, int left, int right, Comparator less_than)
 {
     const Comparable pivot = a[left]; // Choose leftmost element as pivot (hidden on left side of subarray)
 
@@ -679,7 +679,7 @@ void QuickSort3(vector<Comparable>& a, int left, int right, Comparator less_than
     if (left + 10 <= right)
     {
         // Begin partitioning
-        const int pivot_index = first(a, left, right, less_than);
+        const int pivot_index = firstPivotPartition(a, left, right, less_than);
 
         QuickSort3(a, left, pivot_index - 1, less_than);     // Sort small elements
         QuickSort3(a, pivot_index + 1, right, less_than);    // Sort large elements

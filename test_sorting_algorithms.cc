@@ -50,18 +50,11 @@ vector<int> GenerateSortedVector(size_t size_of_vector, bool smaller_to_larger =
 
     // Sort vector based on comparator.
     if (smaller_to_larger)
-        insertionSort(random_vector.begin(), random_vector.end(), less<int>{});
+        QuickSort(random_vector, less<int>{});
     else
-        insertionSort(random_vector.begin(), random_vector.end(), greater<int>{});
+        QuickSort(random_vector, greater<int>{});
 
     return random_vector;
-}
-
-template <typename Comparable>
-void PrintVector(const vector<Comparable>& input) {
-    for (size_t i = 0; i < input.size(); ++i)
-        cout << input[i] << ' ';
-    cout << endl;
 }
 
 // Verifies that a vector is sorted given a comparator.
