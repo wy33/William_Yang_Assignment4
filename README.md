@@ -29,7 +29,7 @@ Most of the sorting functions were copy and pasted from the original code from t
 - GenerateRandomVector(): generates a vector with integers ranging from 0 - 49. Range can be adjusted into the negatives, expand, or contract by changing the rand() calculations inside the parameter of the push_back() function inside the for loop.
 - GenerateSortedVector(): uses the same algorithm of GenerateRandomVector(): and then uses QuickSort() function from "Sort.h" file to sort it in the order dictated by the boolean parameter (true for small to large, false for large to small. Default for the boolean parameter is true).
 - ComputeDuration(): calculates the difference between start and end time supplied to parameters.
-- sortTestingWrapper(): Verifies command line arguments are valid. Then generates a random or sorted vector (small to large/large to small specified by command line arguments. Then sorts the same vector using various sorting algorithms while timing them (order based on command line argument "less" or "greater"). 
+- sortTestingWrapper(): Verifies command line arguments are valid. Then generates a random or sorted vector (small to large/large to small specified by command line arguments. Then sorts the same vector using various sorting algorithms while timing them (order based on command line argument "less" or "greater"). Format for the huge chunk of code inside the last if/else statements is copy input_vector into copy_vector, get current time, sort copy_vector, get current time, compute the time from before sort and after sort, then verify order. The same vector is used for all sorting algorithms to get a fair comparison.
 
 ## Bugs encountered
 
