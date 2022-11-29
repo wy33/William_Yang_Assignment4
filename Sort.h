@@ -496,6 +496,27 @@ void MergeSort(vector<Comparable>& a, Comparator less_than) {
 }
 
 
+/**
+ * Return median of left, center, and right.
+ * Order these and hide the pivot.
+ */
+template <typename Comparable, typename Comparator>
+const Comparable& median3(vector<Comparable>& a, int left, int right, Comparator less_than)
+{
+    int center = (left + right) / 2;
+
+    if (less_than(a[center], a[left]))
+        std::swap(a[left], a[center]);
+    if (less_than(a[right], a[left]))
+        std::swap(a[left], a[right]);
+    if (less_than(a[right], a[center]))
+        std::swap(a[center], a[right]);
+
+    // Place pivot at position right - 1
+    std::swap(a[center], a[right - 1]);
+    return a[right - 1];
+}
+
 
 /**
  * Internal quicksort method that makes recursive calls.
@@ -509,7 +530,7 @@ void QuickSort(vector<Comparable>& a, int left, int right, Comparator less_than)
 {
     if (left + 10 <= right)
     {
-        const Comparable& pivot = median3(a, left, right); ///////////no comparator sent, median calculation shouldnt involve comparator in theory
+        const Comparable& pivot = median3(a, left, right, less_than); ///////////no comparator sent, median calculation shouldnt involve comparator in theory
 
         // Begin partitioning
         int i = left, j = right - 1;
