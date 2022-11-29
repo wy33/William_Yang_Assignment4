@@ -1,18 +1,23 @@
-// Current code is from the textbook
-// Modified by: YOUR NAME
-// Comment file
+// Current code is from the textbook.
+// Modified by: William Yang
+// Sort.h: A file with various sorting algorithms.
 
 #ifndef SORT_H
 #define SORT_H
 
 /**
  * Several sorting routines.
- * Arrays are rearranged with smallest item first.
+ * Arrays are rearranged with smallest item first for the first half.
+ * Arrays are rearranged depending on the comparator supplied for the second half.
  */
 
 #include <vector>
 #include <functional>
 using namespace std;
+
+
+
+//********************//    NON-COMPARATOR SORTS    //********************//
 
 /**
  * Simple insertion sort.
@@ -42,7 +47,7 @@ void insertionSort(vector<Comparable>& a)
 template <typename Comparable>
 void insertionSort(vector<Comparable>& a, int left, int right)
 {
-    for (int p = left + 1; p <= right; ++p)
+    for (int p = left + 1; p <= right; ++p) // Insert partition
     {
         Comparable tmp = std::move(a[p]);
         int j;
@@ -199,6 +204,7 @@ const Comparable& median3(vector<Comparable>& a, int left, int right)
 {
     int center = (left + right) / 2;
 
+    // Order left, center, and right
     if (a[center] < a[left])
         std::swap(a[left], a[center]);
     if (a[right] < a[left])
@@ -308,7 +314,9 @@ void quickSelect(vector<Comparable>& a, int k)
     quickSelect(a, 0, a.size() - 1, k);
 }
 
-
+/*
+ * A divide and conquer-type sort.
+ */
 template <typename Comparable>
 void SORT(vector<Comparable>& items)
 {
@@ -320,6 +328,7 @@ void SORT(vector<Comparable>& items)
 
         auto chosenItem = items[items.size() / 2];
 
+        // Split items array's elements into smaller, same, and larger arrays
         for (auto& i : items)
         {
             if (i < chosenItem)
@@ -330,8 +339,8 @@ void SORT(vector<Comparable>& items)
                 same.push_back(std::move(i));
         }
 
-        SORT(smaller);     // Recursive call!
-        SORT(larger);      // Recursive call!
+        SORT(smaller);     // Recursive call to sort smaller items
+        SORT(larger);      // Recursive call to sort larger items
 
         std::move(begin(smaller), end(smaller), begin(items));
         std::move(begin(same), end(same), begin(items) + smaller.size());
@@ -345,6 +354,8 @@ void SORT(vector<Comparable>& items)
         */
     }
 }
+
+//********************//    COMPARATOR SORTS    //********************//
 
 /*
  * This is the more public version of insertion sort.
@@ -361,7 +372,7 @@ void insertionSort(const RandomIterator& begin,
 
     RandomIterator j;
 
-    for (RandomIterator p = begin + 1; p != end; ++p)
+    for (RandomIterator p = begin + 1; p != end; ++p) // Insert partition
     {
         auto tmp = std::move(*p);
         for (j = p; j != begin && lessThan(tmp, *(j - 1)); --j)
@@ -371,7 +382,7 @@ void insertionSort(const RandomIterator& begin,
 }
 
 /*
- * The two-parameter version calls the three parameter version, using C++11 decltype
+ * The two-parameter version calls the three parameter version, using C++11 decltype.
  */
 template <typename RandomIterator>
 void insertionSort(const RandomIterator& begin,
@@ -380,15 +391,13 @@ void insertionSort(const RandomIterator& begin,
     insertionSort(begin, end, less<decltype(*begin)>{ });
 }
 
-//   Provide code for the following functions.
-//   See PDF for full details.
-//   Note that you will have to modify some of the functions above, or/and add new helper functions.
 
 /**
- * Internal method for heapsort that is used in/////////////////////////////////to be changed, percdown with comparator, changed so far, trye it
- * deleteMax/DeleteMin and buildHeap.
+ * Internal method for heapsort that is used in
+ * deleteMax/DeleteMin and buildHeap using a comparator.
  * i is the position from which to percolate down.
  * n is the logical size of the binary heap.
+ * less_than is the comparator.
  */
 template <typename Comparable, typename Comparator>
 void percDownWithComp(vector<Comparable>& a, int i, int n, Comparator less_than)
@@ -413,10 +422,8 @@ void percDownWithComp(vector<Comparable>& a, int i, int n, Comparator less_than)
 // @a: input/output vector to be sorted.
 // @less_than: Comparator to be used.
 template <typename Comparable, typename Comparator>
-void HeapSort(vector<Comparable>& a, Comparator less_than) {
-    // Add code. You can use any of functions above (after you modified them), or any other helper
-    // function you write.
-
+void HeapSort(vector<Comparable>& a, Comparator less_than)
+{
     for (int i = a.size() / 2 - 1; i >= 0; --i)  /* buildHeap */
         percDownWithComp(a, i, a.size(), less_than);
     for (int j = a.size() - 1; j > 0; --j)
@@ -435,6 +442,7 @@ void HeapSort(vector<Comparable>& a, Comparator less_than) {
  * leftPos is the left-most index of the subarray.
  * rightPos is the index of the start of the second half.
  * rightEnd is the right-most index of the subarray.
+ * less_than is the comparator used.
  */
 template <typename Comparable, typename Comparator>
 void Merge(vector<Comparable>& a, vector<Comparable>& tmpArray,
@@ -468,6 +476,7 @@ void Merge(vector<Comparable>& a, vector<Comparable>& tmpArray,
  * tmpArray is an array to place the merged result.
  * left is the left-most index of the subarray.
  * right is the right-most index of the subarray.
+ * less_than is the comparator to be used.
  */
 template <typename Comparable, typename Comparator>
 void MergeSort(vector<Comparable>& a,
@@ -486,10 +495,8 @@ void MergeSort(vector<Comparable>& a,
 // @a: input/output vector to be sorted.
 // @less_than: Comparator to be used.
 template <typename Comparable, typename Comparator>
-void MergeSort(vector<Comparable>& a, Comparator less_than) {
-    // Add code. You can use any of functions above (after you modified them), or any other helper
-    // function you write.
-
+void MergeSort(vector<Comparable>& a, Comparator less_than)
+{
     vector<Comparable> tmpArray(a.size());
 
     MergeSort(a, tmpArray, 0, a.size() - 1, less_than);
@@ -498,13 +505,14 @@ void MergeSort(vector<Comparable>& a, Comparator less_than) {
 
 /**
  * Return median of left, center, and right.
- * Order these and hide the pivot.
+ * Order these according to the comparator and hide the pivot.
  */
 template <typename Comparable, typename Comparator>
 const Comparable& median3(vector<Comparable>& a, int left, int right, Comparator less_than)
 {
     int center = (left + right) / 2;
 
+    // Order left, center, and right
     if (less_than(a[center], a[left]))
         std::swap(a[left], a[center]);
     if (less_than(a[right], a[left]))
@@ -524,20 +532,21 @@ const Comparable& median3(vector<Comparable>& a, int left, int right, Comparator
  * a is an array of Comparable items.
  * left is the left-most index of the subarray.
  * right is the right-most index of the subarray.
+ * less_than is the comparator to be used.
  */
 template <typename Comparable, typename Comparator>
 void QuickSort(vector<Comparable>& a, int left, int right, Comparator less_than)
 {
     if (left + 10 <= right)
     {
-        const Comparable& pivot = median3(a, left, right, less_than); ///////////no comparator sent, median calculation shouldnt involve comparator in theory
+        const Comparable& pivot = median3(a, left, right, less_than);
 
         // Begin partitioning
         int i = left, j = right - 1;
         for (; ; )
         {
-            while (less_than(a[++i], pivot)) {} ////////////////////changed to less_than
-            while (less_than(pivot, a[--j])) {} ////////////////////changed to less_than
+            while (less_than(a[++i], pivot)) {}
+            while (less_than(pivot, a[--j])) {}
             if (i < j)
                 std::swap(a[i], a[j]);
             else
@@ -546,11 +555,11 @@ void QuickSort(vector<Comparable>& a, int left, int right, Comparator less_than)
 
         std::swap(a[i], a[right - 1]);  // Restore pivot
 
-        QuickSort(a, left, i - 1, less_than);     // Sort small elements ///////////////////added less_than to function call
-        QuickSort(a, i + 1, right, less_than);    // Sort large elements ///////////////////added less_than to function call
+        QuickSort(a, left, i - 1, less_than);     // Sort small elements
+        QuickSort(a, i + 1, right, less_than);    // Sort large elements
     }
     else  // Do an insertion sort on the subarray
-        insertionSort(a.begin() + left, a.begin() + right + 1, less_than);    ////////////////////added less_than to function call, and calls to iterator one
+        insertionSort(a.begin() + left, a.begin() + right + 1, less_than);
 }
 
 
@@ -558,59 +567,42 @@ void QuickSort(vector<Comparable>& a, int left, int right, Comparator less_than)
 // @a: input/output vector to be sorted.
 // @less_than: Comparator to be used.
 template <typename Comparable, typename Comparator>
-void QuickSort(vector<Comparable>& a, Comparator less_than) {
-    // Add code. You can use any of functions above (after you modified them), or any other helper
-    // function you write.
-
+void QuickSort(vector<Comparable>& a, Comparator less_than)
+{
     QuickSort(a, 0, a.size() - 1, less_than);
 }
 
 
 
 /**
- * Return median of left, center, and right.
- * Order these and hide the pivot.
+ * Return pivot index.
+ * Pivot is middle element of subarray.
+ * Partition the subarray.
  */
 template <typename Comparable, typename Comparator>
 int middlePivotPartition(vector<Comparable>& a, int left, int right, Comparator less_than)
 {
-
-/*    int i = left - 1;
-    int j = right + 1;
-
-    while (true)
-    {
-        while (less_than(a[++i], pivot)) {}
-        while (less_than(pivot, a[--j])) {}
-        if (i >= j) return j;
-        std::swap(a[i], a[j]);
-    }*/
-
-/*    for (int j = left; left < right; j++)
-        if (less_than(a[j], pivot) || a[j] == pivot)
-            std::swap(a[++i], a[j]);
-
-    std::swap(a[++i], a[right]);
-    return i;*/
     int center = (left + right) / 2;
-    Comparable pivot = a[center];   // Choose middle element.
+    const Comparable pivot = a[center];   // Choose middle element
 
-    std::swap(a[center], a[right]); // Hide pivot at the end of array.
+    std::swap(a[center], a[right]); // Hide pivot at the end of subarray
 
+    // Adjusted i and j due to different pivot selecting algorithm
     int i = left - 1;
     int j = right;
 
+    // Place smaller elements and larger elements into their own subarrays
+    // depending on the comparator.
     while (true)
     {
         while (less_than(a[++i], pivot)) {}
         while (less_than(pivot, a[--j])) {}
         if (i < j) std::swap(a[i], a[j]);
         else break;
-
     }
-    std::swap(a[right], a[i]);  // Restore pivot.
-    return i;
 
+    std::swap(a[right], a[i]);  // Place pivot on correct position
+    return i;
 }
 
 /**
@@ -619,54 +611,45 @@ int middlePivotPartition(vector<Comparable>& a, int left, int right, Comparator 
  * a is an array of Comparable items.
  * left is the left-most index of the subarray.
  * right is the right-most index of the subarray.
+ * less_than is the comparator to be used.
  */
 template <typename Comparable, typename Comparator>
 void QuickSort2(vector<Comparable>& a, int left, int right, Comparator less_than)
 {
     if (left + 10 <= right)
     {
-        const int pivot_index = middlePivotPartition(a, left, right, less_than); ///////////changed to center as pivot
-
         // Begin partitioning
-/*        int i = left - 1;
+        const int pivot_index = middlePivotPartition(a, left, right, less_than);
 
-        for (int j = left; left < right; j++)
-        {
-            if(less_than(a[j], pi) || )
-        }*/
-
-        //std::swap(a[i], a[right - 1]);  // Restore pivot
-
-        QuickSort2(a, left, pivot_index - 1, less_than);     // Sort small elements ///////////////////added less_than to function call
-        QuickSort2(a, pivot_index + 1, right, less_than);    // Sort large elements ///////////////////added less_than to function call
+        QuickSort2(a, left, pivot_index - 1, less_than);     // Sort small elements
+        QuickSort2(a, pivot_index + 1, right, less_than);    // Sort large elements
     }
     else  // Do an insertion sort on the subarray
-        insertionSort(a.begin() + left, a.begin() + right + 1, less_than);    ////////////////////added less_than to function call, and calls to iterator one
+        insertionSort(a.begin() + left, a.begin() + right + 1, less_than);
 }
 
 // Driver for QuickSort (middle pivot).
 // @a: input/output vector to be sorted.
 // @less_than: Comparator to be used.
 template <typename Comparable, typename Comparator>
-void QuickSort2(vector<Comparable>& a, Comparator less_than) {
-    // quicksort implementation
-    // to be filled
-
+void QuickSort2(vector<Comparable>& a, Comparator less_than)
+{
     QuickSort2(a, 0, a.size() - 1, less_than);
 }
 
 
 
 /**
- * Return median of left, center, and right.
- * Order these and hide the pivot.
+ * Return pivot index.
+ * Pivot is first element of subarray.
+ * Partition the subarray.
  */
 template <typename Comparable, typename Comparator>
 int first(vector<Comparable>& a, int left, int right, Comparator less_than)
 {
-    Comparable pivot = a[left]; // Choose leftmost element as pivot (hidden on left side of array).
+    const Comparable pivot = a[left]; // Choose leftmost element as pivot (hidden on left side of subarray)
 
-
+    // Adjusted i and j to hide pivot on the left instead
     int i = left;
     int j = right + 1;
 
@@ -676,23 +659,10 @@ int first(vector<Comparable>& a, int left, int right, Comparator less_than)
         while (less_than(pivot, a[--j])) {}
         if (i < j) std::swap(a[i], a[j]);
         else break;
-
     }
-    std::swap(a[left], a[j]);   // Place pivot on correct position.
+
+    std::swap(a[left], a[j]);   // Place pivot on correct position
     return j;
-
-/*    int j = right;
-    for (int i = right; i > left; i--)
-        if (less_than(pivot, a[i]))
-            std::swap(a[i], a[j--]);
-
-    std::swap(a[left], a[j]);
-    return j;*/
-
-//    int i = left;
-//    int j = right + 1;
-
-
 }
 
 /**
@@ -701,29 +671,27 @@ int first(vector<Comparable>& a, int left, int right, Comparator less_than)
  * a is an array of Comparable items.
  * left is the left-most index of the subarray.
  * right is the right-most index of the subarray.
+ * less_than is the comparator to be used.
  */
 template <typename Comparable, typename Comparator>
 void QuickSort3(vector<Comparable>& a, int left, int right, Comparator less_than)
 {
     if (left + 10 <= right)
     {
-        const int pivot_index = first(a, left, right, less_than); ///////////changed to leftmost as pivot
-
         // Begin partitioning
+        const int pivot_index = first(a, left, right, less_than);
 
-        QuickSort3(a, left, pivot_index - 1, less_than);     // Sort small elements ///////////////////added less_than to function call
-        QuickSort3(a, pivot_index + 1, right, less_than);    // Sort large elements ///////////////////added less_than to function call
+        QuickSort3(a, left, pivot_index - 1, less_than);     // Sort small elements
+        QuickSort3(a, pivot_index + 1, right, less_than);    // Sort large elements
     }
     else  // Do an insertion sort on the subarray
-        insertionSort(a.begin() + left, a.begin() + right + 1, less_than);    ////////////////////added less_than to function call, and calls to iterator one
+        insertionSort(a.begin() + left, a.begin() + right + 1, less_than);
 }
 
-// Driver for quicksort using first as pivot
+// Driver for quicksort using first as pivot.
 template <typename Comparable, typename Comparator>
-void QuickSort3(vector<Comparable>& a, Comparator less_than) {
-    // quicksort implementation
-    // to be filled
-
+void QuickSort3(vector<Comparable>& a, Comparator less_than)
+{
     QuickSort3(a, 0, a.size() - 1, less_than);
 }
 
