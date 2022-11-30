@@ -35,14 +35,32 @@ Most of the sorting functions were copy and pasted from the original code from t
 
 No bugs encountered for final code. During testing, lots of segmentation faults while working with the 3 quicksort algorithms (i and j values adjusted as result).
 
-## Input File
-
-## Output file
-
 ## Running the assignment
+
+Use provided `Makefile` for Homework 4.
+
+To compile on terminal, type:
+
+```bash
+make
+```
 
 To delete executables and object files, type:
 
 ```bash
 make clean
+```
+
+To run test_sorting_algorithms, type:
+
+```bash
+./test_sorting_algorithms <input_type> <input_size> <comparison_type>
+```
+
+```bash
+./test_sorting_algorithms random 10000 less
+```
+
+```bash
+./test_sorting_algorithms sorted_small_to_large 10000 greater
 ```
