@@ -69,6 +69,6 @@ To run test_sorting_algorithms, type:
 ./test_sorting_algorithms sorted_large_to_small 10000 greater
 ```
 
-input_type: is how the generated array is sorted (random, sorted_small_to_large, sorted_large_to_small).
-input_size: is the size of the generated array (any positive integer).
-comparison_type: is the type of comparison (less/greater).
+- input_type: is how the generated array is sorted (random, sorted_small_to_large, sorted_large_to_small).
+- input_size: is the size of the generated array (any positive integer).
+- comparison_type: is the type of comparison (less/greater).
