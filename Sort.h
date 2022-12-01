@@ -345,13 +345,6 @@ void SORT(vector<Comparable>& items)
         std::move(begin(smaller), end(smaller), begin(items));
         std::move(begin(same), end(same), begin(items) + smaller.size());
         std::move(begin(larger), end(larger), end(items) - larger.size());
-
-        /*
-                items.clear( );
-                items.insert( end( items ), begin( smaller ), end( smaller ) );
-                items.insert( end( items ), begin( same ), end( same ) );
-                items.insert( end( items ), begin( larger ), end( larger ) );
-        */
     }
 }
 
