@@ -207,6 +207,7 @@ void testSortingWrapper(int argc, char** argv) {
     }
 }
 
+/*
 int main(int argc, char** argv) {
     // DO NOT CHANGE or ADD ANY CODE in this function.
     if (argc != 4) {
@@ -218,3 +219,4 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+*/
